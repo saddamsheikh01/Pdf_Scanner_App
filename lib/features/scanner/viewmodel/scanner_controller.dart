@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../../core/utils/permissions.dart';
 import '../../../data/services/camera_service.dart';
@@ -16,6 +17,57 @@ class ScannerController extends ChangeNotifier {
   final List<File> images = [];
   File? lastSavedPdf;
   String extractedText = '';
+
+  Future<PageTapResult> handlePageTap(File image, int index) async {
+    var textCopied = false;
+    var pdfSaved = false;
+    var text = '';
+    File? savedFile;
+
+    try {
+      text = await _textService.extractTextFromImage(image);
+      if (text.trim().isNotEmpty) {
+        await Clipboard.setData(ClipboardData(text: text));
+        textCopied = true;
+      }
+    } catch (error, stack) {
+      debugPrint('Page text extraction failed: $error');
+      debugPrintStack(stackTrace: stack);
+    }
+
+    final hasPermission = await PermissionUtils.requestStorage();
+    if (!hasPermission) {
+      debugPrint('Storage permission denied; continuing with app documents dir.');
+    }
+
+    try {
+      final pdf = await _pdfService.createPdf([image]);
+      final fileName =
+          'scan_page_${index + 1}_${DateTime.now().millisecondsSinceEpoch}.pdf';
+      final saved = await _storageService.saveToDownloads(
+        pdf,
+        fileName: fileName,
+      );
+      final exists = await saved.exists();
+      if (exists) {
+        pdfSaved = true;
+        savedFile = saved;
+        lastSavedPdf = saved;
+        notifyListeners();
+        await _storageService.openFile(saved);
+      }
+    } catch (error, stack) {
+      debugPrint('Single-page PDF failed: $error');
+      debugPrintStack(stackTrace: stack);
+    }
+
+    return PageTapResult(
+      textCopied: textCopied,
+      pdfSaved: pdfSaved,
+      text: text,
+      pdfFile: savedFile,
+    );
+  }
 
   Future<void> scanImage() async {
     final image = await _cameraService.captureImage();
@@ -102,4 +154,18 @@ class ScannerController extends ChangeNotifier {
     extractedText = '';
     notifyListeners();
   }
+}
+
+class PageTapResult {
+  final bool textCopied;
+  final bool pdfSaved;
+  final String text;
+  final File? pdfFile;
+
+  const PageTapResult({
+    required this.textCopied,
+    required this.pdfSaved,
+    required this.text,
+    required this.pdfFile,
+  });
 }

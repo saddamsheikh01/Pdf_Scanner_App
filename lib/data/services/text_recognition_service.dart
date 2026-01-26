@@ -2,6 +2,17 @@ import 'dart:io';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 class TextRecognitionService {
+  Future<String> extractTextFromImage(File image) async {
+    final recognizer = TextRecognizer(script: TextRecognitionScript.latin);
+    try {
+      final input = InputImage.fromFilePath(image.path);
+      final result = await recognizer.processImage(input);
+      return result.text.trim();
+    } finally {
+      await recognizer.close();
+    }
+  }
+
   Future<String> extractTextFromImages(List<File> images) async {
     final recognizer = TextRecognizer(script: TextRecognitionScript.latin);
     final buffer = StringBuffer();
