@@ -68,31 +68,51 @@ class ScannerScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.fromLTRB(20, 18, 20, 6),
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'PDF Scanner',
-                                  style: textTheme.titleLarge?.copyWith(
-                                    color: scheme.primary,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'PDF Scanner',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: textTheme.titleLarge?.copyWith(
+                                      color: scheme.primary,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  'Capture, enhance, and export',
-                                  style: textTheme.bodyMedium?.copyWith(
-                                    color: scheme.onSurface.withValues(alpha: 0.6),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    'Capture, enhance, and export',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: textTheme.bodyMedium?.copyWith(
+                                      color: scheme.onSurface.withValues(alpha: 0.6),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    'Step 1: Scan | Step 2: Review | Step 3: Export',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: textTheme.labelMedium?.copyWith(
+                                      color: scheme.onSurface.withValues(alpha: 0.5),
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            const Spacer(),
+                            const SizedBox(width: 12),
                             Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 InkWell(
-                                  onTap: () =>
-                                      Navigator.pushNamed(context, AppRoutes.textPdf),
+                                  onTap: () => Navigator.pushNamed(
+                                    context,
+                                    AppRoutes.textPdf,
+                                  ),
                                   borderRadius: BorderRadius.circular(20),
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
@@ -103,11 +123,11 @@ class ScannerScreen extends StatelessWidget {
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(20),
                                       border: Border.all(
-                                        color:
-                                            scheme.primary.withValues(alpha: 0.18),
+                                        color: scheme.primary.withValues(alpha: 0.18),
                                       ),
                                     ),
                                     child: Row(
+                                      mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Icon(
                                           Icons.text_fields,
@@ -136,11 +156,11 @@ class ScannerScreen extends StatelessWidget {
                                     color: Colors.white.withValues(alpha: 0.7),
                                     borderRadius: BorderRadius.circular(20),
                                     border: Border.all(
-                                      color:
-                                          scheme.primary.withValues(alpha: 0.12),
+                                      color: scheme.primary.withValues(alpha: 0.12),
                                     ),
                                   ),
                                   child: Row(
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Icon(
                                         Icons.auto_awesome,
@@ -149,7 +169,7 @@ class ScannerScreen extends StatelessWidget {
                                       ),
                                       const SizedBox(width: 6),
                                       Text(
-                                        'Smart mode',
+                                        'Auto enhance',
                                         style: textTheme.labelMedium?.copyWith(
                                           color: scheme.primary,
                                           fontWeight: FontWeight.w600,
@@ -224,6 +244,16 @@ class ScannerScreen extends StatelessWidget {
                                         color: Colors.white.withValues(alpha: 0.8),
                                       ),
                                     ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      hasImages
+                                          ? 'Tap a page to copy text or save as PDF'
+                                          : 'Place the document flat, then scan',
+                                      style: TextStyle(
+                                        color: Colors.white.withValues(alpha: 0.75),
+                                        fontSize: 12,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -245,6 +275,46 @@ class ScannerScreen extends StatelessWidget {
                                     fontWeight: FontWeight.w600,
                                     fontSize: 12,
                                   ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 2, 16, 6),
+                        child: Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.85),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: scheme.primary.withValues(alpha: 0.08),
+                            ),
+                          ),
+                          child: Row(
+                            children: const [
+                              Expanded(
+                                child: _GuideTile(
+                                  icon: Icons.center_focus_strong,
+                                  title: 'Scan',
+                                  subtitle: 'Capture pages',
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: _GuideTile(
+                                  icon: Icons.view_carousel,
+                                  title: 'Review',
+                                  subtitle: 'Check clarity',
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: _GuideTile(
+                                  icon: Icons.picture_as_pdf,
+                                  title: 'Export',
+                                  subtitle: 'Save or share',
                                 ),
                               ),
                             ],
@@ -309,7 +379,7 @@ class ScannerScreen extends StatelessWidget {
                                                     .showSnackBar(
                                                   SnackBar(
                                                     content: Text(
-                                                      messages.join(' · '),
+                                                      messages.join(' - '),
                                                     ),
                                                   ),
                                                 );
@@ -356,12 +426,32 @@ class ScannerScreen extends StatelessWidget {
                                         ),
                                         const SizedBox(height: 8),
                                         Text(
-                                          'Tap Scan to capture a document',
+                                          'Tap Scan below to capture a document',
                                           style: TextStyle(
                                             color: Colors.black.withValues(alpha: 0.6),
                                           ),
                                         ),
                                         const SizedBox(height: 18),
+                                        Wrap(
+                                          spacing: 10,
+                                          runSpacing: 10,
+                                          alignment: WrapAlignment.center,
+                                          children: [
+                                            _StepChip(
+                                              icon: Icons.camera_alt,
+                                              label: 'Scan',
+                                            ),
+                                            _StepChip(
+                                              icon: Icons.view_agenda,
+                                              label: 'Review',
+                                            ),
+                                            _StepChip(
+                                              icon: Icons.picture_as_pdf,
+                                              label: 'Export',
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 14),
                                         Container(
                                           padding: const EdgeInsets.symmetric(
                                             horizontal: 14,
@@ -597,6 +687,97 @@ class ScannerScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _StepChip extends StatelessWidget {
+  const _StepChip({
+    required this.icon,
+    required this.label,
+  });
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.black.withValues(alpha: 0.08),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16, color: const Color(0xFF1F2A44)),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _GuideTile extends StatelessWidget {
+  const _GuideTile({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          width: 34,
+          height: 34,
+          decoration: BoxDecoration(
+            color: const Color(0xFF1F2A44).withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(icon, size: 18, color: const Color(0xFF1F2A44)),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          title,
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          subtitle,
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.black.withValues(alpha: 0.55),
+          ),
+        ),
+      ],
     );
   }
 }

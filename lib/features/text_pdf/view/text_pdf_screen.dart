@@ -117,6 +117,68 @@ class _TextPdfScreenState extends State<TextPdfScreen> {
                   child: ListView(
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                     children: [
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              scheme.primary,
+                              scheme.primary.withValues(alpha: 0.85),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(18),
+                          boxShadow: [
+                            BoxShadow(
+                              color: scheme.primary.withValues(alpha: 0.25),
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 44,
+                              height: 44,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.16),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Icon(
+                                Icons.note_alt,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Create a clean PDF',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    'Add a title, paste your text, and export to Downloads.',
+                                    style: TextStyle(
+                                      color: Colors.white.withValues(alpha: 0.85),
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
                       Card(
                         child: Padding(
                           padding: const EdgeInsets.all(16),
@@ -127,12 +189,20 @@ class _TextPdfScreenState extends State<TextPdfScreen> {
                                 'Title (optional)',
                                 style: textTheme.titleMedium,
                               ),
+                              const SizedBox(height: 6),
+                              Text(
+                                'Helps you find the file later.',
+                                style: textTheme.bodyMedium?.copyWith(
+                                  color: scheme.onSurface.withValues(alpha: 0.6),
+                                ),
+                              ),
                               const SizedBox(height: 10),
                               TextField(
                                 controller: _titleController,
                                 textInputAction: TextInputAction.next,
                                 decoration: InputDecoration(
                                   hintText: 'Document title',
+                                  prefixIcon: const Icon(Icons.title),
                                   filled: true,
                                   fillColor: Colors.white,
                                   border: OutlineInputBorder(
@@ -154,12 +224,20 @@ class _TextPdfScreenState extends State<TextPdfScreen> {
                                 'Content',
                                 style: textTheme.titleMedium,
                               ),
+                              const SizedBox(height: 6),
+                              Text(
+                                'Use clear paragraphs for best readability.',
+                                style: textTheme.bodyMedium?.copyWith(
+                                  color: scheme.onSurface.withValues(alpha: 0.6),
+                                ),
+                              ),
                               const SizedBox(height: 10),
                               TextField(
                                 controller: _contentController,
                                 maxLines: 10,
                                 decoration: InputDecoration(
                                   hintText: 'Paste or type your text here...',
+                                  prefixIcon: const Icon(Icons.subject),
                                   filled: true,
                                   fillColor: Colors.white,
                                   border: OutlineInputBorder(
