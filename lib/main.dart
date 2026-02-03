@@ -15,6 +15,8 @@ class PdfScannerApp extends StatelessWidget {
       title: 'PDF Scanner',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.system,
       initialRoute: AppRoutes.splash,
       routes: AppRoutes.routes,
     );

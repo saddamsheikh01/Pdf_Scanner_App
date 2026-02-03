@@ -1,10 +1,25 @@
 import 'dart:io';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class PdfService {
+  Future<pw.ThemeData> _loadPdfTheme() async {
+    final regular = pw.Font.ttf(
+      await rootBundle.load('assets/fonts/NotoSans-Regular.ttf'),
+    );
+    final bold = pw.Font.ttf(
+      await rootBundle.load('assets/fonts/NotoSans-Bold.ttf'),
+    );
+    return pw.ThemeData.withFont(
+      base: regular,
+      bold: bold,
+    );
+  }
+
   Future<File> createPdf(List<File> images) async {
-    final pdf = pw.Document();
+    final theme = await _loadPdfTheme();
+    final pdf = pw.Document(theme: theme);
 
     for (final img in images) {
       final bytes = await img.readAsBytes();
@@ -26,7 +41,8 @@ class PdfService {
   }
 
   Future<File> createPdfFromText(String text, {String? title}) async {
-    final pdf = pw.Document();
+    final theme = await _loadPdfTheme();
+    final pdf = pw.Document(theme: theme);
     final safeText = text.trim();
 
     pdf.addPage(
@@ -41,8 +57,8 @@ class PdfService {
               ),
             ),
           if (title != null && title.trim().isNotEmpty) pw.SizedBox(height: 12),
-          pw.Text(
-            safeText.isEmpty ? 'No content provided.' : safeText,
+          pw.Paragraph(
+            text: safeText.isEmpty ? 'No content provided.' : safeText,
             style: const pw.TextStyle(fontSize: 12),
           ),
         ],

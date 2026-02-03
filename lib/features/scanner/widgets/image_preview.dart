@@ -15,6 +15,8 @@ class ImagePreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final width = MediaQuery.sizeOf(context).width;
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -31,13 +33,13 @@ class ImagePreview extends StatelessWidget {
               borderRadius: BorderRadius.circular(14),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.08),
-                  blurRadius: 10,
-                  offset: const Offset(0, 6),
+                  color: Colors.black.withValues(alpha: 0.07),
+                  blurRadius: 14,
+                  offset: const Offset(0, 8),
                 ),
               ],
               border: Border.all(
-                color: Colors.black.withValues(alpha: 0.05),
+                color: Colors.white.withValues(alpha: isDark ? 0.2 : 0.7),
                 width: 1,
               ),
             ),
@@ -60,13 +62,16 @@ class ImagePreview extends StatelessWidget {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.55),
+                        color: Colors.white.withValues(alpha: isDark ? 0.12 : 0.72),
                         borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: isDark ? 0.2 : 0.5),
+                        ),
                       ),
                       child: Text(
                         'Page ${index + 1}',
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: scheme.primary,
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                         ),

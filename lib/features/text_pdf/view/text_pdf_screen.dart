@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/widgets/glass_container.dart';
 import '../../../core/utils/permissions.dart';
 import '../../../data/services/pdf_service.dart';
 import '../../../data/services/storage_service.dart';
@@ -74,18 +75,19 @@ class _TextPdfScreenState extends State<TextPdfScreen> {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       body: SafeArea(
         child: Stack(
           children: [
             Positioned.fill(
               child: Container(
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      Color(0xFFF7F8FB),
-                      Color(0xFFE9EDF5),
-                      Color(0xFFF7F8FB),
+                      isDark ? const Color(0xFF0F1115) : const Color(0xFFF5F7FB),
+                      isDark ? const Color(0xFF1A1C22) : const Color(0xFFE7EEFB),
+                      isDark ? const Color(0xFF12141A) : const Color(0xFFF7FAFF),
                     ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -97,20 +99,29 @@ class _TextPdfScreenState extends State<TextPdfScreen> {
               children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        icon: const Icon(Icons.arrow_back),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        'Text to PDF',
-                        style: textTheme.titleLarge?.copyWith(
-                          color: scheme.primary,
+                  child: GlassContainer(
+                    borderRadius: 18,
+                    blur: 16,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    color: Colors.white.withValues(alpha: isDark ? 0.1 : 0.72),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: () => Navigator.pop(context),
+                          icon: const Icon(Icons.arrow_back),
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: 4),
+                        Text(
+                          'Text to PDF',
+                          style: textTheme.titleLarge?.copyWith(
+                            color: scheme.primary,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Expanded(
@@ -179,83 +190,88 @@ class _TextPdfScreenState extends State<TextPdfScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Title (optional)',
-                                style: textTheme.titleMedium,
+                      GlassContainer(
+                        borderRadius: 18,
+                        blur: 16,
+                        padding: const EdgeInsets.all(16),
+                        color: Colors.white.withValues(alpha: isDark ? 0.1 : 0.7),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Title (optional)',
+                              style: textTheme.titleMedium,
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              'Helps you find the file later.',
+                              style: textTheme.bodyMedium?.copyWith(
+                                color: scheme.onSurface.withValues(alpha: 0.6),
                               ),
-                              const SizedBox(height: 6),
-                              Text(
-                                'Helps you find the file later.',
-                                style: textTheme.bodyMedium?.copyWith(
-                                  color: scheme.onSurface.withValues(alpha: 0.6),
+                            ),
+                            const SizedBox(height: 10),
+                            TextField(
+                              controller: _titleController,
+                              textInputAction: TextInputAction.next,
+                              decoration: InputDecoration(
+                                hintText: 'Document title',
+                                prefixIcon: const Icon(Icons.title),
+                                filled: true,
+                                fillColor: Colors.white.withValues(
+                                  alpha: isDark ? 0.08 : 0.8,
                                 ),
-                              ),
-                              const SizedBox(height: 10),
-                              TextField(
-                                controller: _titleController,
-                                textInputAction: TextInputAction.next,
-                                decoration: InputDecoration(
-                                  hintText: 'Document title',
-                                  prefixIcon: const Icon(Icons.title),
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(14),
-                                    borderSide: BorderSide(
-                                      color: scheme.primary.withValues(alpha: 0.2),
-                                    ),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(14),
-                                    borderSide: BorderSide(
-                                      color: scheme.primary.withValues(alpha: 0.15),
-                                    ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                  borderSide: BorderSide(
+                                    color: scheme.primary.withValues(alpha: 0.2),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                'Content',
-                                style: textTheme.titleMedium,
-                              ),
-                              const SizedBox(height: 6),
-                              Text(
-                                'Use clear paragraphs for best readability.',
-                                style: textTheme.bodyMedium?.copyWith(
-                                  color: scheme.onSurface.withValues(alpha: 0.6),
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              TextField(
-                                controller: _contentController,
-                                maxLines: 10,
-                                decoration: InputDecoration(
-                                  hintText: 'Paste or type your text here...',
-                                  prefixIcon: const Icon(Icons.subject),
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(14),
-                                    borderSide: BorderSide(
-                                      color: scheme.primary.withValues(alpha: 0.2),
-                                    ),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(14),
-                                    borderSide: BorderSide(
-                                      color: scheme.primary.withValues(alpha: 0.15),
-                                    ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                  borderSide: BorderSide(
+                                    color: scheme.primary.withValues(alpha: 0.15),
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Content',
+                              style: textTheme.titleMedium,
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              'Use clear paragraphs for best readability.',
+                              style: textTheme.bodyMedium?.copyWith(
+                                color: scheme.onSurface.withValues(alpha: 0.6),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            TextField(
+                              controller: _contentController,
+                              maxLines: 10,
+                              decoration: InputDecoration(
+                                hintText: 'Paste or type your text here...',
+                                prefixIcon: const Icon(Icons.subject),
+                                filled: true,
+                                fillColor: Colors.white.withValues(
+                                  alpha: isDark ? 0.08 : 0.8,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                  borderSide: BorderSide(
+                                    color: scheme.primary.withValues(alpha: 0.2),
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                  borderSide: BorderSide(
+                                    color: scheme.primary.withValues(alpha: 0.15),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       const SizedBox(height: 16),

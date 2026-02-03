@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/widgets/glass_container.dart';
 import '../../../routes/app_routes.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -22,17 +23,18 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       body: Stack(
         children: [
           Positioned.fill(
             child: Container(
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Color(0xFFF7F8FB),
-                    Color(0xFFE4EBF6),
-                    Color(0xFFF7F8FB),
+                    isDark ? const Color(0xFF0F1115) : const Color(0xFFF5F7FB),
+                    isDark ? const Color(0xFF1A1C22) : const Color(0xFFE2EAF8),
+                    isDark ? const Color(0xFF12141A) : const Color(0xFFF7FAFF),
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -47,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen> {
               width: 180,
               height: 180,
               decoration: BoxDecoration(
-                color: scheme.primary.withValues(alpha: 0.08),
+                color: scheme.primary.withValues(alpha: isDark ? 0.12 : 0.08),
                 shape: BoxShape.circle,
               ),
             ),
@@ -59,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen> {
               width: 160,
               height: 160,
               decoration: BoxDecoration(
-                color: scheme.secondary.withValues(alpha: 0.12),
+                color: scheme.secondary.withValues(alpha: isDark ? 0.16 : 0.12),
                 shape: BoxShape.circle,
               ),
             ),
@@ -70,51 +72,51 @@ class _SplashScreenState extends State<SplashScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                Container(
-                  width: 120,
-                  height: 120,
-                  padding: const EdgeInsets.all(22),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.08),
-                        blurRadius: 20,
-                        offset: const Offset(0, 10),
+                  GlassContainer(
+                    borderRadius: 28,
+                    padding: const EdgeInsets.all(22),
+                    color: Colors.white.withValues(alpha: isDark ? 0.12 : 0.65),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: isDark ? 0.18 : 0.4),
+                    ),
+                    child: SizedBox(
+                      width: 76,
+                      height: 76,
+                      child: Image.asset(
+                        'assets/scanner.png',
+                        fit: BoxFit.contain,
                       ),
-                    ],
+                    ),
                   ),
-                  child: Image.asset(
-                    'assets/scanner.png',
-                    fit: BoxFit.contain,
+                  const SizedBox(height: 24),
+                  Text(
+                    'PDF Scanner',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontSize: 26,
+                          color: scheme.primary,
+                        ),
                   ),
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  'PDF Scanner',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontSize: 26,
+                  const SizedBox(height: 10),
+                  Text(
+                    'Scan - Enhance - Share',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: scheme.onSurface.withValues(alpha: 0.7),
+                        ),
+                  ),
+                  const SizedBox(height: 28),
+                  SizedBox(
+                    width: 140,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(999),
+                      child: LinearProgressIndicator(
+                        minHeight: 6,
                         color: scheme.primary,
+                        backgroundColor: scheme.primary.withValues(
+                          alpha: isDark ? 0.25 : 0.12,
+                        ),
                       ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  'Scan - Enhance - Share',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: scheme.onSurface.withValues(alpha: 0.6),
-                      ),
-                ),
-                const SizedBox(height: 28),
-                SizedBox(
-                  width: 120,
-                  child: LinearProgressIndicator(
-                    minHeight: 6,
-                    color: scheme.primary,
-                    backgroundColor: scheme.primary.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(999),
+                    ),
                   ),
-                ),
                 ],
               ),
             ),
