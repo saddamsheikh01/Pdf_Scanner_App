@@ -5,7 +5,8 @@ import '../../../core/widgets/glass_container.dart';
 import '../../../routes/app_routes.dart';
 import '../viewmodel/scanner_controller.dart';
 import '../widgets/image_preview.dart';
-
+import '../widgets/guide_tile.dart';
+import '../widgets/step_chip.dart';
 class ScannerScreen extends StatelessWidget {
   const ScannerScreen({super.key});
 
@@ -325,7 +326,7 @@ class ScannerScreen extends StatelessWidget {
                           child: Row(
                             children: const [
                               Expanded(
-                                child: _GuideTile(
+                                child: GuideTile(
                                   icon: Icons.center_focus_strong,
                                   title: 'Scan',
                                   subtitle: 'Capture pages',
@@ -333,7 +334,7 @@ class ScannerScreen extends StatelessWidget {
                               ),
                               SizedBox(width: 10),
                               Expanded(
-                                child: _GuideTile(
+                                child: GuideTile(
                                   icon: Icons.view_carousel,
                                   title: 'Review',
                                   subtitle: 'Check clarity',
@@ -341,7 +342,7 @@ class ScannerScreen extends StatelessWidget {
                               ),
                               SizedBox(width: 10),
                               Expanded(
-                                child: _GuideTile(
+                                child: GuideTile(
                                   icon: Icons.picture_as_pdf,
                                   title: 'Export',
                                   subtitle: 'Save or share',
@@ -464,15 +465,15 @@ class ScannerScreen extends StatelessWidget {
                                           runSpacing: 10,
                                           alignment: WrapAlignment.center,
                                           children: [
-                                            _StepChip(
+                                            StepChip(
                                               icon: Icons.camera_alt,
                                               label: 'Scan',
                                             ),
-                                            _StepChip(
+                                            StepChip(
                                               icon: Icons.view_agenda,
                                               label: 'Review',
                                             ),
-                                            _StepChip(
+                                            StepChip(
                                               icon: Icons.picture_as_pdf,
                                               label: 'Export',
                                             ),
@@ -704,99 +705,5 @@ class ScannerScreen extends StatelessWidget {
   }
 }
 
-class _StepChip extends StatelessWidget {
-  const _StepChip({
-    required this.icon,
-    required this.label,
-  });
 
-  final IconData icon;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.7),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.5),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 16, color: scheme.primary),
-          const SizedBox(width: 6),
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _GuideTile extends StatelessWidget {
-  const _GuideTile({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-  });
-
-  final IconData icon;
-  final String title;
-  final String subtitle;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 34,
-          height: 34,
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.7),
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: Colors.white.withValues(alpha: 0.5),
-            ),
-          ),
-          child: Icon(icon, size: 18, color: scheme.primary),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        const SizedBox(height: 2),
-        Text(
-          subtitle,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.black.withValues(alpha: 0.55),
-          ),
-        ),
-      ],
-    );
-  }
-}
 
